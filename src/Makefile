@@ -10,9 +10,9 @@ SRC	= main.c \
 # ##################################################################
 
 # Paths to header files
-IPATH	= -I. -Iboehm
+IPATH	= -I. -I../include
 # Path to libraries and lib's names
-LDPATH	= -L. -Lboehm -ll -lgc -lpthread
+LDPATH	= -L. -L../lib -ll -lgc -lpthread -Wl,-rpath -Wl,'$$ORIGIN/../lib'
 # Compiler options
 EXEOPT	= -O3 # -g for debug
 
