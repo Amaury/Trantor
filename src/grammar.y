@@ -3,9 +3,9 @@
 	#include <stdint.h>
 	#include <stdbool.h>
 	#include "node.h"
-	#include "utils.h"
-	#include "stack.h"
-	#include "hashmap.h"
+	#include "utils/utils.h"
+	#include "utils/stack.h"
+	#include "utils/hashmap.h"
 
 	/* declarations */
 	extern int yylineno;
@@ -16,8 +16,8 @@
 	void yyerror(const char *s) {
 		printf("PARSE ERROR (l. %d): %s.\n", yylineno, s);
 	}
-	/* root stack of instructions */
-	stack_t *root_instructions;
+	/* root stack of statements */
+	stack_t *root_statements;
 %}
 
 /* ask for verbose error descriptions */
@@ -29,7 +29,7 @@
 	long double number;
 	char *str;
 	uint16_t token;
-	node_instruction_t *instruction;
+	node_statement_t *statement;
 	node_expression_t *expression;
 	node_identifier_t *identifier;
 	stack_t *stack;
@@ -50,8 +50,8 @@
 %type <identifier> identifier
 %type <expression> expression scalar assignment cloning operation comparison
 %type <expression> function_call method_call function_def class
-%type <instruction> instruction condition while
-%type <stack> instructions block call_parameters def_parameters root
+%type <statement> statement condition while
+%type <stack> statements block call_parameters def_parameters root
 
 /* operators priority */
 %left	'+' '-'
@@ -63,26 +63,26 @@
 
 root
 	: /* empty */			{ printf("~ root - empty\n"); }
-	| instructions			{ root_instructions = $1; printf("~ root - instructions\n"); }
+	| statements			{ root_statements = $1; printf("~ root - statements\n"); }
 	;
 
 block
 	: '{' '}'			{ $$ = NULL; }
-	| '{' instructions '}'		{ $$ = $2; }
-	| instruction			{ $$ = new_stack(); stack_add($$, $1); }
+	| '{' statements '}'		{ $$ = $2; }
+	| statement			{ $$ = new_stack(); stack_add($$, $1); }
 	;
 
-instructions
-	: instructions instruction	{ stack_add($1, $2); }
-	| instruction			{ $$ = new_stack(); stack_add($$, $1); }
+statements
+	: statements statement	{ stack_add($1, $2); }
+	| statement			{ $$ = new_stack(); stack_add($$, $1); }
 	;
 
-instruction
-	: expression ';'		{ $$ = (node_instruction_t*)$1; }
-	| T_RETURN ';'			{ $$ = (node_instruction_t*)new_node_return(NULL); }
-	| T_RETURN expression ';'	{ $$ = (node_instruction_t*)new_node_return($2); }
-	| T_BREAK ';'			{ $$ = (node_instruction_t*)new_node_break(); }
-	| T_CONTINUE ';'		{ $$ = (node_instruction_t*)new_node_continue(); }
+statement
+	: expression ';'		{ $$ = (node_statement_t*)$1; }
+	| T_RETURN ';'			{ $$ = (node_statement_t*)new_node_return(NULL); }
+	| T_RETURN expression ';'	{ $$ = (node_statement_t*)new_node_return($2); }
+	| T_BREAK ';'			{ $$ = (node_statement_t*)new_node_break(); }
+	| T_CONTINUE ';'		{ $$ = (node_statement_t*)new_node_continue(); }
 	| condition
 	| while
 	;
@@ -103,13 +103,13 @@ expression
 
 // condition
 condition
-	: T_IF '(' expression ')' block			{ $$ = (node_instruction_t*)new_node_condition($3, $5, NULL); }
-	| T_IF '(' expression ')' block T_ELSE block	{ $$ = (node_instruction_t*)new_node_condition($3, $5, $7); }
+	: T_IF '(' expression ')' block			{ $$ = (node_statement_t*)new_node_condition($3, $5, NULL); }
+	| T_IF '(' expression ')' block T_ELSE block	{ $$ = (node_statement_t*)new_node_condition($3, $5, $7); }
 	;
 
 // while loop
 while
-	: T_WHILE '(' expression ')' block	{ $$ = (node_instruction_t*)new_node_while($3, $5); }
+	: T_WHILE '(' expression ')' block	{ $$ = (node_statement_t*)new_node_while($3, $5); }
 	;
 
 // scalar values

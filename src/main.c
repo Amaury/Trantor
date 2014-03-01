@@ -1,18 +1,12 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "hashmap.h"
-#include "utils.h"
+#include "utils/hashmap.h"
+#include "utils/utils.h"
 #include "node.h"
 
 extern int yyparse();
 extern FILE *yyin;
-extern stack_t *root_instructions;
-
-bool show_pair(char *key, long int hashval, void *data, void *privdata);
-bool show_pair(char *key, long int hashval, void *data, void *privdata) {
-	printf("- '%s' => '%s'\n", key, (char*)data);
-	return (true);
-}
+extern stack_t *root_statements;
 
 int main(int argc, char **argv) {
 	bool given_file = false;
@@ -24,6 +18,6 @@ int main(int argc, char **argv) {
 	yyparse();
 	if (given_file)
 		fclose(yyin);
-	print_stack(root_instructions, 0);
+	print_stack(root_statements, 0);
 	return 0;
 }

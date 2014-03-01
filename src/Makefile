@@ -1,16 +1,16 @@
 # Executable's name
 NAME	= trantor
 # Source files
-SRC	= main.c \
-	  utils.c \
-	  node.c \
-	  stack.c \
-	  hashmap.c
+SRC	= utils/utils.c \
+	  utils/stack.c \
+	  utils/hashmap.c \
+	  main.c \
+	  node.c
 
 # ##################################################################
 
 # Paths to header files
-IPATH	= -I. -I../include
+IPATH	= -I. -I../../include -I../include
 # Path to libraries and lib's names
 LDPATH	= -L. -L../lib -ll -lgc -lpthread -Wl,-rpath -Wl,'$$ORIGIN/../lib'
 # Compiler options
@@ -39,7 +39,7 @@ all: clean $(NAME)
 
 clean:
 	@echo "##### CLEANING"
-	rm -f lex.yy.c grammar.tab.c grammar.tab.h *.o trantor
+	rm -f lex.yy.c grammar.tab.c grammar.tab.h *.o trantor utils/*.o
 
 lex.yy.c: lexer.l
 	@echo "##### BUILDING LEXER"
@@ -59,7 +59,7 @@ grammar.tab.o: grammar.tab.c
 
 .c.o:
 	@echo "##### COMPILING $<"
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $< -o $@
 
 test:
 	@echo ; more test ; echo ; echo "================" ; echo

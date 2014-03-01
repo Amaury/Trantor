@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "node.h"
-#include "utils.h"
+#include "utils/utils.h"
 #include "grammar.tab.h"
 
 static void _print_offset(int offset);
@@ -65,12 +65,12 @@ void print_node(node_t *node, int offset) {
 		printf("EXPRESSION\n");
 		print_node((node_t*)cond->condition_expression, offset + 2);
 		_print_offset(offset + 1);
-		printf("TRUE INSTRUCTIONS\n");
-		print_stack(cond->true_instructions, offset + 2);
-		if (cond->false_instructions) {
+		printf("TRUE STATEMENTS\n");
+		print_stack(cond->true_statements, offset + 2);
+		if (cond->false_statements) {
 			_print_offset(offset + 1);
-			printf("FALSE INSTRUCTIONS\n");
-			print_stack(cond->false_instructions, offset + 2);
+			printf("FALSE STATEMENTS\n");
+			print_stack(cond->false_statements, offset + 2);
 		}
 	} else if (node->type == N_WHILE) {
 		node_while_t *loop = (node_while_t*)node;
@@ -79,8 +79,8 @@ void print_node(node_t *node, int offset) {
 		printf("EXPRESSION\n");
 		print_node((node_t*)loop->loop_expression, offset + 2);
 		_print_offset(offset + 1);
-		printf("INSTRUCTIONS\n");
-		print_stack(loop->instructions, offset + 2);
+		printf("STATEMENTS\n");
+		print_stack(loop->statements, offset + 2);
 	} else if (node->type == N_FUNC_CALL) {
 		node_funccall_t *call = (node_funccall_t*)node;
 		printf("> FUNCTION CALL\n");
@@ -121,14 +121,14 @@ void print_node(node_t *node, int offset) {
 			print_stack(def->parameters, offset + 2);
 		}
 		_print_offset(offset + 1);
-		printf("INSTRUCTIONS\n");
-		print_stack(def->instructions, offset + 2);
+		printf("STATEMENTS\n");
+		print_stack(def->statements, offset + 2);
 	} else if (node->type == N_CLASS) {
 		node_class_t *classdef = (node_class_t*)node;
 		printf("> CLASS DEF\n");
 		_print_offset(offset + 1);
-		printf("INSTRUCTIONS\n");
-		print_stack(classdef->instructions, offset + 2);
+		printf("STATEMENTS\n");
+		print_stack(classdef->statements, offset + 2);
 	} else if (node->type == N_IDENTIFIER) {
 		node_identifier_t *ident = (node_identifier_t*)node;
 		printf("> IDENTIFIER (%s)\n", ident->name);
@@ -157,9 +157,9 @@ node_t *new_node(node_type_t type) {
 	return (node);
 }
 
-node_instruction_t *new_node_instruction() {
-	node_instruction_t *node = tmalloc(sizeof(node_instruction_t));
-	((node_t*)node)->type = N_INSTRUCTION;
+node_statement_t *new_node_statement() {
+	node_statement_t *node = tmalloc(sizeof(node_statement_t));
+	((node_t*)node)->type = N_STATEMENT;
 	return (node);
 }
 
@@ -202,20 +202,20 @@ node_comparison_t *new_node_comparison(node_expression_t *op1, char bool_operato
 	return (node);
 }
 
-node_condition_t *new_node_condition(node_expression_t *condition_expression, stack_t *true_instructions, stack_t *false_instructions) {
+node_condition_t *new_node_condition(node_expression_t *condition_expression, stack_t *true_statements, stack_t *false_statements) {
 	node_condition_t *node = tmalloc(sizeof(node_condition_t));
 	((node_t*)node)->type = N_CONDITION;
 	node->condition_expression = condition_expression;
-	node->true_instructions = true_instructions;
-	node->false_instructions = false_instructions;
+	node->true_statements = true_statements;
+	node->false_statements = false_statements;
 	return (node);
 }
 
-node_while_t *new_node_while(node_expression_t *loop_expression, stack_t *instructions) {
+node_while_t *new_node_while(node_expression_t *loop_expression, stack_t *statements) {
 	node_while_t *node = tmalloc(sizeof(node_while_t));
 	((node_t*)node)->type = N_WHILE;
 	node->loop_expression = loop_expression;
-	node->instructions = instructions;
+	node->statements = statements;
 	return (node);
 }
 
@@ -236,18 +236,18 @@ node_methcall_t *new_node_methcall(node_identifier_t *objname, node_identifier_t
 	return (node);
 }
 
-node_funcdef_t *new_node_funcdef(stack_t *parameters, stack_t *instructions) {
+node_funcdef_t *new_node_funcdef(stack_t *parameters, stack_t *statements) {
 	node_funcdef_t *node = tmalloc(sizeof(node_funcdef_t));
 	((node_t*)node)->type = N_FUNC_DEF;
 	node->parameters = parameters;
-	node->instructions = instructions;
+	node->statements = statements;
 	return (node);
 }
 
-node_class_t *new_node_class(stack_t *instructions) {
+node_class_t *new_node_class(stack_t *statements) {
 	node_class_t *node = tmalloc(sizeof(node_class_t));
 	((node_t*)node)->type = N_CLASS;
-	node->instructions = instructions;
+	node->statements = statements;
 	return (node);
 }
 
