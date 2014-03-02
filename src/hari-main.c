@@ -3,8 +3,8 @@
 #include "utils/hashmap.h"
 #include "utils/utils.h"
 #include "utils/buffstr.h"
-#include "node.h"
-#include "salvor.h"
+#include "yugo-node.h"
+#include "salvor-bytecode.h"
 
 extern int yyparse();
 extern FILE *yyin;

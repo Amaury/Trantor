@@ -2,10 +2,10 @@
 	#include <stdio.h>
 	#include <stdint.h>
 	#include <stdbool.h>
-	#include "node.h"
 	#include "utils/utils.h"
 	#include "utils/stack.h"
 	#include "utils/hashmap.h"
+	#include "yugo-node.h"
 
 	/* declarations */
 	extern int yylineno;
