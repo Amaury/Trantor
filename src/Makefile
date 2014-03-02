@@ -4,8 +4,11 @@ NAME	= trantor
 SRC	= utils/utils.c \
 	  utils/stack.c \
 	  utils/hashmap.c \
+	  utils/buffstr.c \
 	  main.c \
-	  node.c
+	  node.c \
+	  salvor.c \
+	  daneel.c
 
 # ##################################################################
 
