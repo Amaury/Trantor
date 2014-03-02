@@ -6,7 +6,7 @@ SRC	= utils/utils.c \
 	  utils/hashmap.c \
 	  utils/buffstr.c \
 	  hari-main.c \
-	  yugo-node.c \
+	  yugo-ast.c \
 	  salvor-bytecode.c \
 	  daneel-vm.c
 
@@ -42,7 +42,7 @@ all: clean $(NAME)
 
 clean:
 	@echo "##### CLEANING"
-	rm -f gaal-lex.yy.c preem-grammar.tab.c preem-grammar.tab.h *.o trantor utils/*.o
+	rm -f lex.yy.c preem-grammar.tab.c preem-grammar.tab.h *.o trantor utils/*.o
 
 lex.yy.c: gaal-lexer.l
 	@echo "##### BUILDING LEXER"

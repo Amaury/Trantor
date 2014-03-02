@@ -3,7 +3,7 @@
 #include "utils/hashmap.h"
 #include "utils/utils.h"
 #include "utils/buffstr.h"
-#include "yugo-node.h"
+#include "yugo-ast.h"
 #include "salvor-bytecode.h"
 
 extern int yyparse();

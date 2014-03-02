@@ -8,7 +8,7 @@
 #include "utils/utils.h"
 #include "utils/stack.h"
 #include "utils/hashmap.h"
-#include "yugo-node.h"
+#include "yugo-ast.h"
 #include "preem-grammar.tab.h"
 
 extern int yywrap();

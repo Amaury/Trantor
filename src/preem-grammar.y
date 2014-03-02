@@ -5,7 +5,7 @@
 	#include "utils/utils.h"
 	#include "utils/stack.h"
 	#include "utils/hashmap.h"
-	#include "yugo-node.h"
+	#include "yugo-ast.h"
 
 	/* declarations */
 	extern int yylineno;
