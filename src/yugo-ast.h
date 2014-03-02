@@ -1,5 +1,5 @@
-#ifndef __NODE_H__
-#define __NODE_H__
+#ifndef __YUGO_AST_H__
+#define __YUGO_AST_H__
 
 #include <stdbool.h>
 #include "utils/stack.h"
@@ -147,4 +147,4 @@ node_scalar_t *new_node_string(char *str);
 node_scalar_t *new_node_boolean(bool boolean);
 node_scalar_t *new_node_number(long double number);
 
-#endif // __NODE_H__
+#endif // __YUGO_AST_H__
