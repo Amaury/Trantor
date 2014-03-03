@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 	// VM creation
 	daneel = new_vm();
 	// bytecode generation
-	bytecode_generator(plan, root_statements);
-	print_bytecode(plan);
+	bytecode_generator(daneel, root_statements);
+	print_bytecode(daneel->plan);
 	return (0);
 }

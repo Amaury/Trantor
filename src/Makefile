@@ -5,9 +5,11 @@ SRC	= utils/utils.c \
 	  utils/stack.c \
 	  utils/hashmap.c \
 	  utils/buffstr.c \
+	  utils/label.c \
 	  hari-main.c \
 	  yugo-ast.c \
 	  salvor-bytecode.c \
+	  mule-memory.c \
 	  daneel-vm.c
 
 # ##################################################################

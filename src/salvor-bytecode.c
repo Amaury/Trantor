@@ -53,7 +53,7 @@ void bytecode_generator(vm_t *daneel, stack_t *statements) {
 	unsigned char c = (unsigned char)OP_NOOP;
 	size_t stmt_offset;
 
-	buffstr_append(buf, &c, 1);
+	buffstr_append(daneel->plan, &c, 1);
 	for (stmt_offset = 0; stmt_offset < statements->count; ++stmt_offset) {
 		node_t *node = stack_get(statements, stmt_offset);
 		_bytecode_generate(daneel, node);
@@ -84,7 +84,7 @@ void _bytecode_generate(vm_t *daneel, node_t *node) {
 void _bytecode_node_boolean(vm_t *daneel, node_t *node) {
 	unsigned char c = (unsigned char)OP_NOOP;
 
-	buffstr_appen(daneel->plan, &c, 1);
+	buffstr_append(daneel->plan, &c, 1);
 }
 void _bytecode_node_number(vm_t *daneel, node_t *node) {
 }
