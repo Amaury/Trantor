@@ -5,11 +5,11 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "node.h"
-#include "utils.h"
-#include "stack.h"
-#include "hashmap.h"
-#include "grammar.tab.h"
+#include "utils/utils.h"
+#include "utils/stack.h"
+#include "utils/hashmap.h"
+#include "yugo-ast.h"
+#include "preem-grammar.tab.h"
 
 extern int yywrap();
 %}

@@ -1,0 +1,13 @@
+Makefile
+config.log
+config.status
+doc/Makefile
+libtool
+pkgconfig/atomic_ops-uninstalled.pc
+pkgconfig/atomic_ops.pc
+src/.deps/
+src/Makefile
+src/config.h
+src/stamp-h1
+tests/.deps/
+tests/Makefile

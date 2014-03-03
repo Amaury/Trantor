@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
-#include "node.h"
-#include "utils.h"
-#include "grammar.tab.h"
+#include "utils/utils.h"
+#include "yugo-ast.h"
+#include "preem-grammar.tab.h"
 
 static void _print_offset(int offset);
 static void _print_offset(int offset) {
@@ -65,12 +65,12 @@ void print_node(node_t *node, int offset) {
 		printf("EXPRESSION\n");
 		print_node((node_t*)cond->condition_expression, offset + 2);
 		_print_offset(offset + 1);
-		printf("TRUE INSTRUCTIONS\n");
-		print_stack(cond->true_instructions, offset + 2);
-		if (cond->false_instructions) {
+		printf("TRUE STATEMENTS\n");
+		print_stack(cond->true_statements, offset + 2);
+		if (cond->false_statements) {
 			_print_offset(offset + 1);
-			printf("FALSE INSTRUCTIONS\n");
-			print_stack(cond->false_instructions, offset + 2);
+			printf("FALSE STATEMENTS\n");
+			print_stack(cond->false_statements, offset + 2);
 		}
 	} else if (node->type == N_WHILE) {
 		node_while_t *loop = (node_while_t*)node;
@@ -79,8 +79,8 @@ void print_node(node_t *node, int offset) {
 		printf("EXPRESSION\n");
 		print_node((node_t*)loop->loop_expression, offset + 2);
 		_print_offset(offset + 1);
-		printf("INSTRUCTIONS\n");
-		print_stack(loop->instructions, offset + 2);
+		printf("STATEMENTS\n");
+		print_stack(loop->statements, offset + 2);
 	} else if (node->type == N_FUNC_CALL) {
 		node_funccall_t *call = (node_funccall_t*)node;
 		printf("> FUNCTION CALL\n");
@@ -121,14 +121,14 @@ void print_node(node_t *node, int offset) {
 			print_stack(def->parameters, offset + 2);
 		}
 		_print_offset(offset + 1);
-		printf("INSTRUCTIONS\n");
-		print_stack(def->instructions, offset + 2);
+		printf("STATEMENTS\n");
+		print_stack(def->statements, offset + 2);
 	} else if (node->type == N_CLASS) {
 		node_class_t *classdef = (node_class_t*)node;
 		printf("> CLASS DEF\n");
 		_print_offset(offset + 1);
-		printf("INSTRUCTIONS\n");
-		print_stack(classdef->instructions, offset + 2);
+		printf("STATEMENTS\n");
+		print_stack(classdef->statements, offset + 2);
 	} else if (node->type == N_IDENTIFIER) {
 		node_identifier_t *ident = (node_identifier_t*)node;
 		printf("> IDENTIFIER (%s)\n", ident->name);
@@ -153,28 +153,24 @@ void print_node(node_t *node, int offset) {
 
 node_t *new_node(node_type_t type) {
 	node_t *node = tmalloc(sizeof(node_t));
-	printf("+ new node\n");
 	node->type = type;
 	return (node);
 }
 
-node_instruction_t *new_node_instruction() {
-	node_instruction_t *node = tmalloc(sizeof(node_instruction_t));
-	printf("+ new instruction\n");
-	((node_t*)node)->type = N_INSTRUCTION;
+node_statement_t *new_node_statement() {
+	node_statement_t *node = tmalloc(sizeof(node_statement_t));
+	((node_t*)node)->type = N_STATEMENT;
 	return (node);
 }
 
 node_expression_t *new_node_expression() {
 	node_expression_t *node = tmalloc(sizeof(node_expression_t));
-	printf("+ new expression\n");
 	((node_t*)node)->type = N_EXPRESSION;
 	return (node);
 }
 
 node_identifier_t *new_node_identifier(char *name) {
 	node_identifier_t *node = tmalloc(sizeof(node_identifier_t));
-	printf("+ new identifier (%s)\n", name);
 	((node_t*)node)->type = N_IDENTIFIER;
 	node->name = name;
 	return (node);
@@ -182,7 +178,6 @@ node_identifier_t *new_node_identifier(char *name) {
 
 node_assignment_t *new_node_assignment(node_identifier_t *identifier, node_expression_t *expression) {
 	node_assignment_t *node = tmalloc(sizeof(node_assignment_t));
-	printf("+ new assignment\n");
 	((node_t*)node)->type = N_ASSIGNMENT;
 	node->identifier = identifier;
 	node->expression = expression;
@@ -191,7 +186,6 @@ node_assignment_t *new_node_assignment(node_identifier_t *identifier, node_expre
 
 node_operation_t *new_node_operation(node_expression_t *op1, char operator, node_expression_t *op2) {
 	node_operation_t *node = tmalloc(sizeof(node_operation_t));
-	printf("+ new operation\n");
 	((node_t*)node)->type = N_OPERATION;
 	node->op1 = op1;
 	node->operator = operator;
@@ -201,7 +195,6 @@ node_operation_t *new_node_operation(node_expression_t *op1, char operator, node
 
 node_comparison_t *new_node_comparison(node_expression_t *op1, char bool_operator, node_expression_t *op2) {
 	node_comparison_t *node = tmalloc(sizeof(node_comparison_t));
-	printf(" + new comparison\n");
 	((node_t*)node)->type = N_COMPARISON;
 	node->op1 = op1;
 	node->bool_operator = bool_operator;
@@ -209,28 +202,25 @@ node_comparison_t *new_node_comparison(node_expression_t *op1, char bool_operato
 	return (node);
 }
 
-node_condition_t *new_node_condition(node_expression_t *condition_expression, stack_t *true_instructions, stack_t *false_instructions) {
+node_condition_t *new_node_condition(node_expression_t *condition_expression, stack_t *true_statements, stack_t *false_statements) {
 	node_condition_t *node = tmalloc(sizeof(node_condition_t));
-	printf("+ new condition\n");
 	((node_t*)node)->type = N_CONDITION;
 	node->condition_expression = condition_expression;
-	node->true_instructions = true_instructions;
-	node->false_instructions = false_instructions;
+	node->true_statements = true_statements;
+	node->false_statements = false_statements;
 	return (node);
 }
 
-node_while_t *new_node_while(node_expression_t *loop_expression, stack_t *instructions) {
+node_while_t *new_node_while(node_expression_t *loop_expression, stack_t *statements) {
 	node_while_t *node = tmalloc(sizeof(node_while_t));
-	printf("+ new while\n");
 	((node_t*)node)->type = N_WHILE;
 	node->loop_expression = loop_expression;
-	node->instructions = instructions;
+	node->statements = statements;
 	return (node);
 }
 
 node_funccall_t *new_node_funccall(node_identifier_t *identifier, stack_t *parameters) {
 	node_funccall_t *node = tmalloc(sizeof(node_funccall_t));
-	printf("+ new funccall\n");
 	((node_t*)node)->type = N_FUNC_CALL;
 	node->identifier = identifier;
 	node->parameters = parameters;
@@ -239,7 +229,6 @@ node_funccall_t *new_node_funccall(node_identifier_t *identifier, stack_t *param
 
 node_methcall_t *new_node_methcall(node_identifier_t *objname, node_identifier_t *methname, stack_t *parameters) {
 	node_methcall_t *node = tmalloc(sizeof(node_methcall_t));
-	printf("+ new methcall\n");
 	((node_t*)node)->type = N_METH_CALL;
 	node->objname = objname;
 	node->methname = methname;
@@ -247,26 +236,23 @@ node_methcall_t *new_node_methcall(node_identifier_t *objname, node_identifier_t
 	return (node);
 }
 
-node_funcdef_t *new_node_funcdef(stack_t *parameters, stack_t *instructions) {
+node_funcdef_t *new_node_funcdef(stack_t *parameters, stack_t *statements) {
 	node_funcdef_t *node = tmalloc(sizeof(node_funcdef_t));
-	printf("+ new funcdef\n");
 	((node_t*)node)->type = N_FUNC_DEF;
 	node->parameters = parameters;
-	node->instructions = instructions;
+	node->statements = statements;
 	return (node);
 }
 
-node_class_t *new_node_class(stack_t *instructions) {
+node_class_t *new_node_class(stack_t *statements) {
 	node_class_t *node = tmalloc(sizeof(node_class_t));
-	printf("+ new class\n");
 	((node_t*)node)->type = N_CLASS;
-	node->instructions = instructions;
+	node->statements = statements;
 	return (node);
 }
 
 node_return_t *new_node_return(node_expression_t *value) {
 	node_return_t *node = tmalloc(sizeof(node_return_t));
-	printf("+ new return\n");
 	((node_t*)node)->type = N_RETURN;
 	node->value = value;
 	return (node);
@@ -274,21 +260,18 @@ node_return_t *new_node_return(node_expression_t *value) {
 
 node_break_t *new_node_break() {
 	node_break_t *node = tmalloc(sizeof(node_return_t));
-	printf("+ new break\n");
 	((node_t*)node)->type = N_BREAK;
 	return (node);
 }
 
 node_continue_t *new_node_continue() {
 	node_continue_t *node = tmalloc(sizeof(node_continue_t));
-	printf("+ new continue\n");
 	((node_t*)node)->type = N_CONTINUE;
 	return (node);
 }
 
 node_scalar_t *new_node_string(char *str) {
 	node_scalar_t *node = tmalloc(sizeof(node_scalar_t));
-	printf("+ new string (%s)\n", str);
 	((node_t*)node)->type = N_STRING;
 	node->value.str = str;
 	return (node);
@@ -296,7 +279,6 @@ node_scalar_t *new_node_string(char *str) {
 
 node_scalar_t *new_node_boolean(bool boolean) {
 	node_scalar_t *node = tmalloc(sizeof(node_scalar_t));
-	printf("+ new boolean (%s)\n", boolean ? "true" : "false");
 	((node_t*)node)->type = N_BOOLEAN;
 	node->value.boolean = boolean;
 	return (node);
@@ -304,7 +286,6 @@ node_scalar_t *new_node_boolean(bool boolean) {
 
 node_scalar_t *new_node_number(long double number) {
 	node_scalar_t *node = tmalloc(sizeof(node_scalar_t));
-	printf("+ new number (%Lf)\n", number);
 	((node_t*)node)->type = N_NUMBER;
 	node->value.number = number;
 	return (node);

@@ -1,2 +1,5 @@
 *.o
-
+preem-grammar.tab.c
+preem-grammar.tab.h
+lex.yy.c
+trantor

@@ -1,18 +1,21 @@
 # Executable's name
 NAME	= trantor
 # Source files
-SRC	= main.c \
-	  utils.c \
-	  node.c \
-	  stack.c \
-	  hashmap.c
+SRC	= utils/utils.c \
+	  utils/stack.c \
+	  utils/hashmap.c \
+	  utils/buffstr.c \
+	  hari-main.c \
+	  yugo-ast.c \
+	  salvor-bytecode.c \
+	  daneel-vm.c
 
 # ##################################################################
 
 # Paths to header files
-IPATH	= -I. -Iboehm
+IPATH	= -I. -I../../include -I../include
 # Path to libraries and lib's names
-LDPATH	= -L. -Lboehm -ll -lgc -lpthread
+LDPATH	= -L. -L../lib -ll -lgc -lpthread -Wl,-rpath -Wl,'$$ORIGIN/../lib'
 # Compiler options
 EXEOPT	= -O3 # -g for debug
 
@@ -31,35 +34,35 @@ LDFLAGS = $(EXEOPT) $(LDPATH)
 
 .PHONY:	all clean test
 
-$(NAME): grammar.tab.o lex.yy.o $(OBJS)
+$(NAME): preem-grammar.tab.o lex.yy.o $(OBJS)
 	@echo "##### LINKING EXECUTABLE"
-	$(CC) $(OBJS) grammar.tab.o lex.yy.o $(LDFLAGS) -o $(NAME)
+	$(CC) $(OBJS) preem-grammar.tab.o lex.yy.o $(LDFLAGS) -o $(NAME)
 
 all: clean $(NAME)
 
 clean:
 	@echo "##### CLEANING"
-	rm -f lex.yy.c grammar.tab.c grammar.tab.h *.o trantor
+	rm -f lex.yy.c preem-grammar.tab.c preem-grammar.tab.h *.o trantor utils/*.o
 
-lex.yy.c: lexer.l
+lex.yy.c: gaal-lexer.l
 	@echo "##### BUILDING LEXER"
-	lex lexer.l
+	lex gaal-lexer.l
 
-grammar.tab.c: grammar.y
+preem-grammar.tab.c: preem-grammar.y
 	@echo "##### BUILDING PARSER"
-	bison -d grammar.y
+	bison -d preem-grammar.y
 
 lex.yy.o: lex.yy.c
 	@echo "##### COMPILING lex.yy.c"
 	$(CC) -pedantic -ansi -std=c99 -Wall -D_GNU_SOURCE -Wno-unused-function -c lex.yy.c
 
-grammar.tab.o: grammar.tab.c
+preem-grammar.tab.o: preem-grammar.tab.c
 	@echo "##### COMPILING grammar.tab.c"
-	$(CC) -pedantic -ansi -std=c99 -Wall -D_GNU_SOURCE -c grammar.tab.c
+	$(CC) -pedantic -ansi -std=c99 -Wall -D_GNU_SOURCE -c preem-grammar.tab.c
 
 .c.o:
 	@echo "##### COMPILING $<"
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $< -o $@
 
 test:
 	@echo ; more test ; echo ; echo "================" ; echo
