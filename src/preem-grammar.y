@@ -5,6 +5,7 @@
 	#include "utils/utils.h"
 	#include "utils/stack.h"
 	#include "utils/hashmap.h"
+	#include "utils/label.h"
 	#include "yugo-ast.h"
 
 	/* declarations */
@@ -27,6 +28,7 @@
 %union {
 	bool boolean;
 	long double number;
+	label_t *label;
 	char *str;
 	uint16_t token;
 	node_statement_t *statement;
@@ -38,6 +40,7 @@
 /* list of tokens (terminal symbols), with their types in the YYSTYPE union */
 %token T_NULL
 %token <str> T_IDENTIFIER T_STRING
+%token <label> T_LABEL
 %token <number> T_NUMBER
 %token <boolean> T_BOOL
 %token <token> '{' '}' '(' ')' '.' ',' '+' '-' '*' '/' '%' '~' '=' ';' '<' '>'
@@ -118,6 +121,7 @@ scalar
 	| T_BOOL				{ $$ = (node_expression_t*)new_node_boolean($1 ? true : false); }
 	| T_NUMBER				{ $$ = (node_expression_t*)new_node_number($1); }
 	| T_STRING				{ $$ = (node_expression_t*)new_node_string($1); }
+	| T_LABEL				{ $$ = (node_expression_t*)new_node_label($1); }
 	;
 
 // mathematical operation

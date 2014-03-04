@@ -3,12 +3,14 @@
 
 #include <stdbool.h>
 #include "utils/stack.h"
+#include "utils/label.h"
 
 // node types
 typedef enum {
 	N_BOOLEAN,
 	N_NUMBER,
 	N_STRING,
+	N_LABEL,
 	N_STATEMENT,
 	N_EXPRESSION,
 	N_IDENTIFIER,
@@ -118,6 +120,7 @@ typedef struct {
 	node_expression_t node;
 	union {
 		char *str;
+		label_t *label;
 		bool boolean;
 		long double number;
 	} value;

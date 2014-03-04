@@ -277,6 +277,13 @@ node_scalar_t *new_node_string(char *str) {
 	return (node);
 }
 
+node_scalar_t *new_node_label(label_t *label) {
+	node_scalar_t *node = tmalloc(sizeof(node_scalar_t));
+	((node_t*)node)->type = N_LABEL;
+	node->value.label = label;
+	return (node);
+}
+
 node_scalar_t *new_node_boolean(bool boolean) {
 	node_scalar_t *node = tmalloc(sizeof(node_scalar_t));
 	((node_t*)node)->type = N_BOOLEAN;
