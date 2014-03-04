@@ -34,11 +34,11 @@ typedef enum {
 
 /**
  * Generates bytecode stream from a list of statements.
- * @param	daneel		Pointer to the VM.
+ * @param	vm		Pointer to the VM.
  * @param	statements	A list of statements.
  * @return	The resulting bytecode stream.
  */
-void bytecode_generator(vm_t *daneel, stack_t *statements);
+void bytecode_generator(vm_t *vm, stack_t *statements);
 
 /*
  * Show bytecode value.

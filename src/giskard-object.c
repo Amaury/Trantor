@@ -1,3 +1,4 @@
+#include "utils/utils.h"
 #include "giskard-object.h"
 
 // Creates a new class

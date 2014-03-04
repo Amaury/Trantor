@@ -5,7 +5,7 @@
 #include "utils/hashmap.h"
 
 /** Executable function. */
-struct object_s *(*object_exec_t)(stack_t *params);
+typedef struct object_s *(*object_exec_t)(stack_t *params);
 
 /**
  * Object type.
@@ -48,7 +48,7 @@ typedef struct object_s {
  * @param	parents	List of class' parents.
  * @return	A pointer to the class object.
  */
-object_t *new_class(parents);
+object_t *new_class(stack_t *parents);
 /**
  * Creates a new scalar object.
  * @param	type	Object type.

@@ -4,29 +4,29 @@
 #include "yugo-ast.h"
 
 // private methods
-void _bytecode_generate(vm_t *daneel, node_t *node);
-void _bytecode_node_boolean(vm_t *daneel, node_t *node);
-void _bytecode_node_number(vm_t *daneel, node_t *node);
-void _bytecode_node_string(vm_t *daneel, node_t *node);
-void _bytecode_node_statement(vm_t *daneel, node_t *node);
-void _bytecode_node_expression(vm_t *daneel, node_t *node);
-void _bytecode_node_identifier(vm_t *daneel, node_t *node);
-void _bytecode_node_assignment(vm_t *daneel, node_t *node);
-void _bytecode_node_operation(vm_t *daneel, node_t *node);
-void _bytecode_node_comparison(vm_t *daneel, node_t *node);
-void _bytecode_node_condition(vm_t *daneel, node_t *node);
-void _bytecode_node_while(vm_t *daneel, node_t *node);
-void _bytecode_node_funcdef(vm_t *daneel, node_t *node);
-void _bytecode_node_funccall(vm_t *daneel, node_t *node);
-void _bytecode_node_class(vm_t *daneel, node_t *node);
-void _bytecode_node_return(vm_t *daneel, node_t *node);
-void _bytecode_node_break(vm_t *daneel, node_t *node);
-void _bytecode_node_continue(vm_t *daneel, node_t *node);
-void _bytecode_node_methcall(vm_t *daneel, node_t *node);
+void _bytecode_generate(vm_t *vm, node_t *node);
+void _bytecode_node_boolean(vm_t *vm, node_t *node);
+void _bytecode_node_number(vm_t *vm, node_t *node);
+void _bytecode_node_string(vm_t *vm, node_t *node);
+void _bytecode_node_statement(vm_t *vm, node_t *node);
+void _bytecode_node_expression(vm_t *vm, node_t *node);
+void _bytecode_node_identifier(vm_t *vm, node_t *node);
+void _bytecode_node_assignment(vm_t *vm, node_t *node);
+void _bytecode_node_operation(vm_t *vm, node_t *node);
+void _bytecode_node_comparison(vm_t *vm, node_t *node);
+void _bytecode_node_condition(vm_t *vm, node_t *node);
+void _bytecode_node_while(vm_t *vm, node_t *node);
+void _bytecode_node_funcdef(vm_t *vm, node_t *node);
+void _bytecode_node_funccall(vm_t *vm, node_t *node);
+void _bytecode_node_class(vm_t *vm, node_t *node);
+void _bytecode_node_return(vm_t *vm, node_t *node);
+void _bytecode_node_break(vm_t *vm, node_t *node);
+void _bytecode_node_continue(vm_t *vm, node_t *node);
+void _bytecode_node_methcall(vm_t *vm, node_t *node);
 // array of code
 struct {
 	node_type_t type;
-	void (*f)(vm_t *daneel, node_t *node);
+	void (*f)(vm_t *vm, node_t *node);
 } _bytecode_generators[] = {
 	{N_BOOLEAN, _bytecode_node_boolean},
 	{N_NUMBER, _bytecode_node_number},
@@ -49,14 +49,14 @@ struct {
 };
 
 // Generates bytecode stream from a list of statements.
-void bytecode_generator(vm_t *daneel, stack_t *statements) {
+void bytecode_generator(vm_t *vm, stack_t *statements) {
 	unsigned char c = (unsigned char)OP_NOOP;
 	size_t stmt_offset;
 
-	buffstr_append(daneel->plan, &c, 1);
+	buffstr_append(vm->bytecode, &c, 1);
 	for (stmt_offset = 0; stmt_offset < statements->count; ++stmt_offset) {
 		node_t *node = stack_get(statements, stmt_offset);
-		_bytecode_generate(daneel, node);
+		_bytecode_generate(vm, node);
 	}
 }
 
@@ -75,48 +75,48 @@ void print_bytecode(buffstr_t *buf) {
  * @param	buf	Pointer to a buffered string.
  * @param	node	Pointer to an AST node.
  */
-void _bytecode_generate(vm_t *daneel, node_t *node) {
-	void (*f)(vm_t *daneel, node_t *node);
+void _bytecode_generate(vm_t *vm, node_t *node) {
+	void (*f)(vm_t *vm, node_t *node);
 
 	f = _bytecode_generators[(int)node->type].f;
-	f(daneel, node);
+	f(vm, node);
 }
-void _bytecode_node_boolean(vm_t *daneel, node_t *node) {
+void _bytecode_node_boolean(vm_t *vm, node_t *node) {
 	unsigned char c = (unsigned char)OP_NOOP;
 
-	buffstr_append(daneel->plan, &c, 1);
+	buffstr_append(vm->bytecode, &c, 1);
 }
-void _bytecode_node_number(vm_t *daneel, node_t *node) {
+void _bytecode_node_number(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_string(vm_t *daneel, node_t *node) {
+void _bytecode_node_string(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_statement(vm_t *daneel, node_t *node) {
+void _bytecode_node_statement(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_expression(vm_t *daneel, node_t *node) {
+void _bytecode_node_expression(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_identifier(vm_t *daneel, node_t *node) {
+void _bytecode_node_identifier(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_assignment(vm_t *daneel, node_t *node) {
+void _bytecode_node_assignment(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_operation(vm_t *daneel, node_t *node) {
+void _bytecode_node_operation(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_comparison(vm_t *daneel, node_t *node) {
+void _bytecode_node_comparison(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_condition(vm_t *daneel, node_t *node) {
+void _bytecode_node_condition(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_while(vm_t *daneel, node_t *node) {
+void _bytecode_node_while(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_funcdef(vm_t *daneel, node_t *node) {
+void _bytecode_node_funcdef(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_funccall(vm_t *daneel, node_t *node) {
+void _bytecode_node_funccall(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_class(vm_t *daneel, node_t *node) {
+void _bytecode_node_class(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_return(vm_t *daneel, node_t *node) {
+void _bytecode_node_return(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_break(vm_t *daneel, node_t *node) {
+void _bytecode_node_break(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_continue(vm_t *daneel, node_t *node) {
+void _bytecode_node_continue(vm_t *vm, node_t *node) {
 }
-void _bytecode_node_methcall(vm_t *daneel, node_t *node) {
+void _bytecode_node_methcall(vm_t *vm, node_t *node) {
 }

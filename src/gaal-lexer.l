@@ -28,7 +28,7 @@ extern int yywrap();
 \/\/.*$			;
 
 \"(\\.|[^\\"])*\"	{ yylval.str = tstrdup(yytext + 1, yyleng - 2); return T_STRING; }
-\'(\\.|[^\\'])*\'	{ yylval.str = new_label_from_buffer(yytext + 1, yyleng - 2); return T_LABEL; }
+\'(\\.|[^\\'])*\'	{ yylval.label = new_label_from_buffer(yytext + 1, yyleng - 2); return T_LABEL; }
 [ \t\r\n]		;
 [0-9]+\.?[0-9]*		{ yylval.number = strtold(yytext, NULL); return T_NUMBER; }
 0x[a-fA-F0-9]+		{ yylval.number = strtold(yytext, NULL); return T_NUMBER; }

@@ -9,8 +9,9 @@ SRC	= utils/utils.c \
 	  hari-main.c \
 	  yugo-ast.c \
 	  salvor-bytecode.c \
-	  mule-memory.c \
-	  daneel-vm.c
+	  giskard-object.c \
+	  daneel-vm.c \
+	  janov-lib.c
 
 # ##################################################################
 

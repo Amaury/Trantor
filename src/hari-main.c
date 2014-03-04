@@ -14,7 +14,7 @@ extern stack_t *root_statements;
 /** Main function. */
 int main(int argc, char **argv) {
 	bool given_file = false;
-	vm_t *daneel;
+	vm_t *vm;
 
 	// parsing
 	if (argc > 1) {
@@ -26,9 +26,9 @@ int main(int argc, char **argv) {
 		fclose(yyin);
 	print_stack(root_statements, 0);
 	// VM creation
-	daneel = new_vm();
+	vm = new_vm();
 	// bytecode generation
-	bytecode_generator(daneel, root_statements);
-	print_bytecode(daneel->plan);
+	bytecode_generator(vm, root_statements);
+	print_bytecode(vm->bytecode);
 	return (0);
 }

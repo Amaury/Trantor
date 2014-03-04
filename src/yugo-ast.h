@@ -147,6 +147,7 @@ node_return_t *new_node_return(node_expression_t *value);
 node_break_t *new_node_break(void);
 node_continue_t *new_node_continue(void);
 node_scalar_t *new_node_string(char *str);
+node_scalar_t *new_node_label(label_t *label);
 node_scalar_t *new_node_boolean(bool boolean);
 node_scalar_t *new_node_number(long double number);
 
