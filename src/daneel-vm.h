@@ -5,7 +5,7 @@
 #include "mule-memory.h"
 
 typedef struct {
-	memory_manager_t mule;
+	memory_manager_t *mule;
 	buffstr_t *plan;
 } vm_t;
 
