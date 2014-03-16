@@ -1,0 +1,5 @@
+f = function(x) {
+	x = x * 2;
+	return x;
+};
+b = f(2);

@@ -123,6 +123,12 @@ void print_node(node_t *node, int offset) {
 		_print_offset(offset + 1);
 		printf("STATEMENTS\n");
 		print_stack(def->statements, offset + 2);
+	} else if (node->type == N_PRINT) {
+		node_print_t *pr = (node_print_t*)node;
+		printf("> PRINT\n");
+		_print_offset(offset + 1);
+		printf("PARAMETER\n");
+		print_node((node_t*)pr->parameter, offset + 2);
 	} else if (node->type == N_CLASS) {
 		node_class_t *classdef = (node_class_t*)node;
 		printf("> CLASS DEF\n");
@@ -241,6 +247,13 @@ node_funcdef_t *new_node_funcdef(stack_t *parameters, stack_t *statements) {
 	((node_t*)node)->type = N_FUNC_DEF;
 	node->parameters = parameters;
 	node->statements = statements;
+	return (node);
+}
+
+node_print_t *new_node_print(node_expression_t *parameter) {
+	node_print_t *node = tmalloc(sizeof(node_print_t));
+	((node_t*)node)->type = N_PRINT;
+	node->parameter = parameter;
 	return (node);
 }
 

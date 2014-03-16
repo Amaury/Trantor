@@ -24,11 +24,12 @@ int main(int argc, char **argv) {
 	yyparse();
 	if (given_file)
 		fclose(yyin);
-	print_stack(root_statements, 0);
 	// VM creation
-	vm = new_vm();
+	vm = new_vm(root_statements);
 	// bytecode generation
-	bytecode_generator(vm, root_statements);
-	print_bytecode(vm->bytecode);
+	//bytecode_generator(vm, root_statements);
+	//print_bytecode(vm->bytecode);
+	// AST interpretation
+	vm_exec(vm);
 	return (0);
 }

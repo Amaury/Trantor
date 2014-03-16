@@ -49,6 +49,7 @@ extern int yywrap();
 "return"		{ return (yylval.token = T_RETURN); }
 "break"			{ return (yylval.token = T_BREAK); }
 "continue"		{ return (yylval.token = T_CONTINUE); }
+"print"			{ return (yylval.token = T_PRINT); }
 
 [a-zA-Z_][a-zA-Z0-9_]*	{ yylval.str = tstrdup(yytext, yyleng); return T_IDENTIFIER; }
 

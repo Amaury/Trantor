@@ -25,6 +25,7 @@ typedef enum {
 	N_RETURN,
 	N_BREAK,
 	N_CONTINUE,
+	N_PRINT,
 	N_METH_CALL
 } node_type_t;
 
@@ -97,6 +98,11 @@ typedef struct {
 	stack_t *parameters;
 	stack_t *statements;
 } node_funcdef_t;
+// print statement
+typedef struct {
+	node_expression_t node;
+	node_expression_t *parameter;
+} node_print_t;
 // class definition node
 typedef struct {
 	node_expression_t node;
@@ -142,6 +148,7 @@ node_while_t *new_node_while(node_expression_t *loop_expression, stack_t *statem
 node_funccall_t *new_node_funccall(node_identifier_t *identifier, stack_t *parameters);
 node_methcall_t *new_node_methcall(node_identifier_t *objname, node_identifier_t *methname, stack_t *parameters);
 node_funcdef_t *new_node_funcdef(stack_t *parameters, stack_t *statements);
+node_print_t *new_node_print(node_expression_t *parameter);
 node_class_t *new_node_class(stack_t *statements);
 node_return_t *new_node_return(node_expression_t *value);
 node_break_t *new_node_break(void);

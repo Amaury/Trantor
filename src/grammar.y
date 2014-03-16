@@ -46,13 +46,13 @@
 %token <token> '{' '}' '(' ')' '.' ',' '+' '-' '*' '/' '%' '~' '=' ';' '<' '>'
 %token <token> T_CLONE T_EQUAL T_IDENTICAL T_NEQUAL T_NIDENTICAL T_GREATEREQ T_LESSEQ
 %token <token> T_CLASS T_EXTENDS T_FINAL T_IF T_ELSE T_FOREACH T_FUNCTION T_NEW T_WHILE
-%token <token> T_RETURN T_BREAK T_CONTINUE T_AND T_OR
+%token <token> T_RETURN T_BREAK T_CONTINUE T_PRINT T_AND T_OR
 
 /* types of non-terminal symbols */
 %type <token> operator bool_operator
 %type <identifier> identifier
 %type <expression> expression scalar assignment cloning operation comparison
-%type <expression> function_call method_call function_def class
+%type <expression> function_call method_call function_def class print
 %type <statement> statement condition while
 %type <stack> statements block call_parameters def_parameters root
 
@@ -66,7 +66,7 @@
 
 root
 	: /* empty */			{ printf("~ root - empty\n"); }
-	| statements			{ root_statements = $1; printf("~ root - statements\n"); }
+	| statements			{ root_statements = $1; }
 	;
 
 block
@@ -98,6 +98,7 @@ expression
 	| comparison
 	| assignment
 	| cloning
+	| print
 	| function_def
 	| function_call
 	| method_call
@@ -183,6 +184,11 @@ def_parameters
 // class definition
 class
 	: T_CLASS block	{ $$ = (node_expression_t*)new_node_class($2); }
+	;
+
+// print
+print
+	: T_PRINT '(' expression ')'	{ $$ = (node_expression_t*)new_node_print($3); }
 	;
 
 %%
