@@ -6,12 +6,12 @@ SRC	= utils/utils.c \
 	  utils/hashmap.c \
 	  utils/buffstr.c \
 	  utils/label.c \
-	  hari-main.c \
-	  yugo-ast.c \
-	  salvor-bytecode.c \
-	  giskard-object.c \
-	  daneel-vm.c \
-	  janov-lib.c
+	  main.c \
+	  ast.c \
+	  bytecode.c \
+	  object.c \
+	  vm.c \
+	  lib.c
 
 # ##################################################################
 
@@ -37,31 +37,31 @@ LDFLAGS = $(EXEOPT) $(LDPATH)
 
 .PHONY:	all clean test
 
-$(NAME): preem-grammar.tab.o lex.yy.o $(OBJS)
+$(NAME): grammar.tab.o lex.yy.o $(OBJS)
 	@echo "##### LINKING EXECUTABLE"
-	$(CC) $(OBJS) preem-grammar.tab.o lex.yy.o $(LDFLAGS) -o $(NAME)
+	$(CC) $(OBJS) grammar.tab.o lex.yy.o $(LDFLAGS) -o $(NAME)
 
 all: clean $(NAME)
 
 clean:
 	@echo "##### CLEANING"
-	rm -f lex.yy.c preem-grammar.tab.c preem-grammar.tab.h *.o trantor utils/*.o
+	rm -f lex.yy.c grammar.tab.c grammar.tab.h *.o trantor utils/*.o
 
-lex.yy.c: gaal-lexer.l
+lex.yy.c: lexer.l
 	@echo "##### BUILDING LEXER"
-	lex gaal-lexer.l
+	lex lexer.l
 
-preem-grammar.tab.c: preem-grammar.y
+grammar.tab.c: grammar.y
 	@echo "##### BUILDING PARSER"
-	bison -d preem-grammar.y
+	bison -d grammar.y
 
 lex.yy.o: lex.yy.c
 	@echo "##### COMPILING lex.yy.c"
 	$(CC) -pedantic -ansi -std=c99 -Wall -D_GNU_SOURCE -Wno-unused-function -c lex.yy.c
 
-preem-grammar.tab.o: preem-grammar.tab.c
+grammar.tab.o: grammar.tab.c
 	@echo "##### COMPILING grammar.tab.c"
-	$(CC) -pedantic -ansi -std=c99 -Wall -D_GNU_SOURCE -c preem-grammar.tab.c
+	$(CC) -pedantic -ansi -std=c99 -Wall -D_GNU_SOURCE -c grammar.tab.c
 
 .c.o:
 	@echo "##### COMPILING $<"

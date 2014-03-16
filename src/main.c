@@ -3,8 +3,8 @@
 #include "utils/hashmap.h"
 #include "utils/utils.h"
 #include "utils/buffstr.h"
-#include "yugo-ast.h"
-#include "salvor-bytecode.h"
+#include "ast.h"
+#include "bytecode.h"
 
 /* External definitions, see preem-grammar.y file. */
 extern int yyparse();

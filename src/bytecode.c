@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "salvor-bytecode.h"
-#include "daneel-vm.h"
-#include "yugo-ast.h"
+#include "bytecode.h"
+#include "vm.h"
+#include "ast.h"
 
 // private methods
 void _bytecode_generate(vm_t *vm, node_t *node);

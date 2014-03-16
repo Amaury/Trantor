@@ -1,5 +1,5 @@
-#ifndef __GISKARD_OBJECT_H__
-#define __GISKARD_OBJECT_H__
+#ifndef __OBJECT_H__
+#define __OBJECT_H__
 
 #include "utils/stack.h"
 #include "utils/hashmap.h"
@@ -82,4 +82,4 @@ void object_set_exec(object_t *obj, object_exec_t exec);
  */
 void object_add_symbol(object_t *obj, char *name, object_t *value);
 
-#endif // __GISKARD_OBJECT_H__
+#endif // __OBJECT_H__

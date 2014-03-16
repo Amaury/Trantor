@@ -1,5 +1,5 @@
 #include "utils/utils.h"
-#include "daneel-vm.h"
+#include "vm.h"
 
 // private functions
 void _vm_init_globals(vm_t *vm);

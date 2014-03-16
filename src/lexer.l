@@ -9,8 +9,8 @@
 #include "utils/stack.h"
 #include "utils/hashmap.h"
 #include "utils/label.h"
-#include "yugo-ast.h"
-#include "preem-grammar.tab.h"
+#include "ast.h"
+#include "grammar.tab.h"
 
 extern int yywrap();
 %}

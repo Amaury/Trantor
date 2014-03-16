@@ -1,5 +1,5 @@
 #include "utils/utils.h"
-#include "giskard-object.h"
+#include "object.h"
 
 // Creates a new class
 object_t *new_class(stack_t *parents) {

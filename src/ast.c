@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "utils/utils.h"
-#include "yugo-ast.h"
-#include "preem-grammar.tab.h"
+#include "ast.h"
+#include "grammar.tab.h"
 
 static void _print_offset(int offset);
 static void _print_offset(int offset) {

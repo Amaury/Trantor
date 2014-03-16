@@ -1,5 +1,5 @@
-#ifndef __DANEEL_VM_H__
-#define __DANEEL_VM_H__
+#ifndef __VM_H__
+#define __VM_H__
 
 #include "utils/buffstr.h"
 #include "utils/hashmap.h"
@@ -17,4 +17,4 @@ typedef struct {
 /** Creates a virtual machine. */
 vm_t *new_vm(void);
 
-#endif // __DANEEL_VM_H__
+#endif // __VM_H__

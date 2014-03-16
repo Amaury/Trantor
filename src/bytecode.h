@@ -1,9 +1,9 @@
-#ifndef __SALVOR_BYTECODE_H__
-#define __SALVOR_BYTECODE_H__
+#ifndef __BYTECODE_H__
+#define __BYTECODE_H__
 
 #include "utils/stack.h"
 #include "utils/buffstr.h"
-#include "daneel-vm.h"
+#include "vm.h"
 
 /** List of opcodes. */
 typedef enum {
@@ -46,4 +46,4 @@ void bytecode_generator(vm_t *vm, stack_t *statements);
  */
 void print_bytecode(buffstr_t *buf);
 
-#endif // __SALVOR_BYTECODE_H__
+#endif // __BYTECODE_H__
